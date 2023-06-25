@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Apple';
+    src: local('Apple'), url(../assets/fonts/Apple.ttf), format('ttf');
+  }
+* {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-family: 'Apple', monospace;
+    font-size: 1em;
+}
