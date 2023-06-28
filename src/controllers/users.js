@@ -1,22 +1,32 @@
 import crypto from "node:crypto";
 import { db } from "../database.js";
 
+const getUserByUsername = async (username) => {
+  const user = await db("users").where({ username }).first();
+  return user;
+};
+
 export default {
-  createUser: async (username, password) => {
-    const salt = crypto.randomBytes(16).toString("hex");
-    const hash = crypto
-      .pbkdf2Sync(password, salt, 100000, 64, "sha512")
-      .toString("hex");
-    const token = crypto.randomBytes(16).toString("hex");
+  createUser: async ({ username, password }) => {
+    let existingUser = await getUserByUsername(username);
+    if (!existingUser) {
+      const salt = crypto.randomBytes(16).toString("hex");
+      const hash = crypto
+        .pbkdf2Sync(password, salt, 100000, 64, "sha512")
+        .toString("hex");
+      const token = crypto.randomBytes(16).toString("hex");
 
-    const [user] = await db("users")
-      .insert({ username, salt, hash, token })
-      .returning("*");
+      const [user] = await db("users")
+        .insert({ username, salt, hash, token })
+        .returning("*");
 
-    return user;
+      return token;
+    } else {
+      return null;
+    }
   },
-  getUserByPassword: async (username, password) => {
-    const user = await db("users").where({ username }).first();
+  getUserByPassword: async ({ username, password }) => {
+    const user = await getUserByUsername(username);
     if (!user) return null;
 
     // todo add lastlogin
@@ -33,9 +43,5 @@ export default {
 
     return user;
   },
-  getUserByUsername: async (username) => {
-    const user = await db("users").where({ username }).first();
-
-    return user;
-  },
+  getUserByUsername,
 };

@@ -1,22 +1,25 @@
-import React, { useEffect } from "react";
-import io from "socket.io-client";
-import "./styles/main.scss";
+import { BrowserRouter } from "react-router-dom";
+import React from "react";
+import { AuthProvider } from "./LoginRegister/AuthProvider.js";
+import Pages from "./Pages.js";
 
 const App = () => {
-  useEffect(() => {
-    const socket = io("http://localhost:3000");
-    socket.on("connect", () => {
-      console.log("Socket connected");
-    });
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  // vh
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+  window.addEventListener("resize", () => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  });
+  //
 
-  return <div className='App'>ahoj</div>;
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Pages />
+      </AuthProvider>
+    </BrowserRouter>
+  );
 };
 
 export default App;

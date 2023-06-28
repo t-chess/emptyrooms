@@ -3,33 +3,54 @@ import users from "../controllers/users.js";
 import loadUser from "../middleware/loadUser.js";
 
 const router = express.Router();
-// views
-router.get("/register", (req, res) => {
-  res.render("register");
-});
-router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.redirect("/");
-});
 
 // endpoints
+router.get("/usernameAvailable/:username", async (req, res) => {
+  const user = await users.getUserByUsername(req.params["username"]);
+  if (user) {
+    res.json({ success: false });
+  } else {
+    res.json({ success: true });
+  }
+});
 router.post("/register", async (req, res) => {
-  const user = await users.createUser(req.body.username, req.body.password);
-  res.cookie("token", user.token);
-  res.redirect("/");
+  const token = await users.createUser({
+    username: req.body.username,
+    password: req.body.password,
+  });
+  if (token) {
+    res.cookie("token", token);
+    res.json({ success: true });
+  } else {
+    res.json({ success: false, message: "Username already taken" });
+  }
 });
 router.post("/login", async (req, res) => {
-  const user = await users.getUserByPassword(
-    req.body.username,
-    req.body.password
-  );
+  const user = await users.getUserByPassword({
+    username: req.body.username,
+    password: req.body.password,
+  });
   if (user) {
     res.cookie("token", user.token);
-    loadUser(req, res, () => {
-      res.redirect("/rooms");
-    });
+    res.json({ success: true });
   } else {
-    res.redirect("/");
+    res.json({ success: false, message: "Bad credentials" });
+  }
+});
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+});
+router.get("/checkAuth", async (req, res) => {
+  if (req.cookies.token) {
+    const user = await users.getUserByToken(req.cookies.token);
+    if (user) {
+      res.json({ success: true });
+    } else {
+      res.clearCookie("token");
+      res.json({ success: false });
+    }
+  } else {
+    res.json({ success: false });
   }
 });
 

@@ -1,3 +1,6 @@
+@import "mixins";
+@import "home";
+
 @font-face {
     font-family: 'Apple';
     src: local('Apple'), url(../assets/fonts/Apple.ttf), format('ttf');
@@ -6,6 +9,39 @@
     margin: 0;
     padding: 0;
     position: relative;
+    box-sizing: border-box;
     font-family: 'Apple', monospace;
     font-size: 1em;
+}
+
+main {
+  width: 100%;
+  padding: 0 2.5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+  &.anchor {
+    color: $mold;
+    text-decoration: underline;
+    &:hover {
+      color: $beetroot;
+    }
+  } 
+}
+
+h1 {
+  font-size: 2em;
+  padding: 1em;
+  text-transform: uppercase;
+  // text-shadow: -2px 0 0 #fdff2a,
+  //   -4px 0 0 #df4a42,
+  //   2px 0 0 #91fcfe,
+  //   4px 0 0 #4405fc;
 }

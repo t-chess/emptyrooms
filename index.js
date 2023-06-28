@@ -22,9 +22,9 @@ export const app = express();
 
 app.use(cors());
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "http://localhost:3001" } });
+const io = new Server(server, { cors: { origin: "http://localhost:3000" } });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // app.set("view engine", "ejs");
 
