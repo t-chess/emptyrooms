@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthProvider.js";
 import axios from "axios";
 
-const Welcome = () => {
+export default function Welcome() {
   const [registerPage, setregisterPage] = useState(false);
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
@@ -84,6 +84,4 @@ const Welcome = () => {
       </form>
     </main>
   );
-};
-
-export default Welcome;
+}

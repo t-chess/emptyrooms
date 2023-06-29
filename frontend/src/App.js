@@ -3,7 +3,7 @@ import React from "react";
 import { AuthProvider } from "./LoginRegister/AuthProvider.js";
 import Pages from "./Pages.js";
 
-const App = () => {
+export default function App() {
   // vh
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -20,6 +20,4 @@ const App = () => {
       </AuthProvider>
     </BrowserRouter>
   );
-};
-
-export default App;
+}

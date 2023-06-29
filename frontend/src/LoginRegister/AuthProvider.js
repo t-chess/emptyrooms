@@ -6,6 +6,7 @@ export const AuthContext = createContext({ isLoggedIn: false });
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +25,6 @@ export const AuthProvider = ({ children }) => {
     axios.post("/login", { username, password }).then((response) => {
       if (response.data.success) {
         setIsLoggedIn(true);
-        console.log("hook ", isLoggedIn);
         navigate("/");
       } else {
         callback(response.data.message);
@@ -42,12 +42,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    axios.post("/logout");
-    navigate("/welcome");
+    axios.post("/logout").then((response) => {
+      window.location.reload();
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, userData, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

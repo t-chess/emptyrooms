@@ -31,14 +31,17 @@ router.post("/login", async (req, res) => {
     password: req.body.password,
   });
   if (user) {
-    res.cookie("token", user.token);
-    res.json({ success: true });
+    res.cookie("token", user.token, {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+    res.json({ success: true, user: { id: user.id, username: user.username } });
   } else {
     res.json({ success: false, message: "Bad credentials" });
   }
 });
 router.post("/logout", (req, res) => {
   res.clearCookie("token");
+  res.json({ success: true });
 });
 router.get("/checkAuth", async (req, res) => {
   if (req.cookies.token) {
