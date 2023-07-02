@@ -1,5 +1,4 @@
 @import "mixins";
-@import "home";
 
 @font-face {
     font-family: 'Apple';
@@ -45,3 +44,6 @@ h1 {
   //   2px 0 0 #91fcfe,
   //   4px 0 0 #4405fc;
 }
+
+@import "home";
+@import "room";

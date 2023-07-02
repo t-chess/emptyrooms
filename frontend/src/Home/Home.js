@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import io from "socket.io-client";
 import Controls from "./components/Controls";
+import Room from "./components/Room";
 
 export default function Home() {
   useEffect(() => {
@@ -17,7 +18,8 @@ export default function Home() {
   }, []);
   return (
     <div>
-      <Controls /> Home
+      <Controls />
+      <Room />
     </div>
   );
 }

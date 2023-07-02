@@ -1,13 +1,19 @@
 import express from "express";
 import rooms from "../controllers/rooms.js";
-import loadUser from "../middleware/loadUser.js";
-import loadRoom from "../middleware/loadRoom.js";
 import requiresAuth from "../middleware/requiresAuth.js";
 
 const router = express.Router();
 
-router.get("/rooms", requiresAuth, loadRoom, async (req, res) => {
-  res.render("rooms", { user: res.locals.user, room: res.locals.room });
+router.get("/getRoom/:id", requiresAuth, async (req, res) => {
+  const room = await rooms.getRoomById(req.params["id"]);
+  if (room) {
+    res.json({
+      success: true,
+      room,
+    });
+  } else {
+    res.json({ success: false, message: "Room not found" });
+  }
 });
 
 export default router;

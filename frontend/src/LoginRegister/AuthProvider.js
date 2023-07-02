@@ -13,10 +13,9 @@ export const AuthProvider = ({ children }) => {
     axios.get("/checkAuth").then((response) => {
       if (response.data.success) {
         setIsLoggedIn(true);
-        // navigate("/");
+        setUserData(response.data.user);
       } else {
         setIsLoggedIn(false);
-        // navigate("/welcome");
       }
     });
   }, [navigate]);
@@ -25,6 +24,7 @@ export const AuthProvider = ({ children }) => {
     axios.post("/login", { username, password }).then((response) => {
       if (response.data.success) {
         setIsLoggedIn(true);
+        setUserData(response.data.user);
         navigate("/");
       } else {
         callback(response.data.message);

@@ -8,10 +8,6 @@ import cors from "cors";
 
 import "./src/database.js";
 
-// middlewares
-import loadUser from "./src/middleware/loadUser.js";
-// import requiresAuth from "./src/middleware/requiresAuth.js";
-
 // // routes
 import usersRouter from "./src/routes/users.js";
 import roomsRouter from "./src/routes/rooms.js";
@@ -36,21 +32,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(loadUser);
 app.use(usersRouter);
 app.use(roomsRouter);
 
 setSockets(io);
-
-// app.get("/", loadUser, (req, res) => {
-//   const user = res.locals.user;
-
-//   if (user) {
-//     res.redirect("/rooms");
-//   } else {
-//     res.render("index");
-//   }
-// });
 
 server.listen(port);
 server.on("listening", () => {

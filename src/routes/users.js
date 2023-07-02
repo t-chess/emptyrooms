@@ -1,6 +1,5 @@
 import express from "express";
 import users from "../controllers/users.js";
-import loadUser from "../middleware/loadUser.js";
 
 const router = express.Router();
 
@@ -47,7 +46,10 @@ router.get("/checkAuth", async (req, res) => {
   if (req.cookies.token) {
     const user = await users.getUserByToken(req.cookies.token);
     if (user) {
-      res.json({ success: true });
+      res.json({
+        success: true,
+        user: { id: user.id, username: user.username },
+      });
     } else {
       res.clearCookie("token");
       res.json({ success: false });
