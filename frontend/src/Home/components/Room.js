@@ -1,31 +1,32 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import RoomGrid from "./room/RoomGrid";
+import Spinner from "../../utils/Spinner";
+import { AuthContext } from "../../LoginRegister/AuthProvider.js";
+import { RoomContext } from "../utils/RoomProvider.js";
 
 export default function Room() {
-  const [activeRoom, setActiveRoom] = useState(1);
-  const [roomData, setRoomData] = useState(null);
+  const { userData } = useContext(AuthContext);
+  const { roomData, myCoordinates, goToRoom, updateUsers, socket } =
+    useContext(RoomContext);
 
+  // sockets
   useEffect(() => {
-    goToRoom();
-  }, [activeRoom]);
-
-  const goToRoom = () => {
-    axios.get("/getRoom/" + activeRoom).then((response) => {
-      if (response.data.success) {
-        setRoomData(response.data.room);
-      } else {
-        console.log(response.data.message);
-      }
+    goToRoom(null, (myData) => {
+      socket.emit("joinedRoom", myData);
     });
-  };
-  return (
-    <>
-      {roomData ? (
-        <RoomGrid gridWidth={roomData.width} gridHeight={roomData.height} />
-      ) : (
-        <div>no data</div>
-      )}
-    </>
-  );
+  }, []);
+  socket.on("shareData", (data) => {
+    updateUsers(data.user);
+    socket.emit("shareResponse", {
+      socket: data.id,
+      data: { user: userData, coordinates: myCoordinates },
+    });
+  });
+  socket.on("receiveShareResponse", (data) => {
+    updateUsers(data);
+  });
+  socket.on("receiveUpdate", (data) => {
+    updateUsers(data);
+  });
+  return <div className='room'>{roomData ? <RoomGrid /> : <Spinner />}</div>;
 }
